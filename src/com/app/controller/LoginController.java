@@ -26,7 +26,7 @@ public class LoginController extends HttpServlet{
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		//HttpSession session = request.getSession();
 	
 		Login login = new Login();
 		login.setEmail(request.getParameter("email"));
@@ -35,10 +35,11 @@ public class LoginController extends HttpServlet{
 		String result=loginDAO.loginCheck(login);
 		
 		if(result.equals("true")){
-			//Cookie loginCookie = new Cookie("email",login.getEmail());
+			String email=request.getParameter("email");
+				Cookie loginCookie = new Cookie("email",email);
 	    	//loginCookie.setMaxAge(30*60);
-			//response.addCookie(loginCookie);
-			session.setAttribute("email",login.getEmail());
+			response.addCookie(loginCookie);
+			//session.setAttribute("email",login.getEmail());
 			response.sendRedirect("EmployeeController?action=LIST");
 		}
 		 
