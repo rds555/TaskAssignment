@@ -12,9 +12,13 @@
 </head>
 <body>
 	<%
-        String email=(String)session.getAttribute("email");
-        
-        //redirect user to login page if not logged in
+         // String email=(String)session.getAttribute("email");
+	 String email = null;
+     Cookie[] cookies = request.getCookies();
+     if(cookies !=null){
+     for(Cookie ck : cookies){
+     	if(ck.getName().equals("email")) email = ck.getValue();
+     }
         if(email==null){
         	response.sendRedirect("index.jsp");
         }
