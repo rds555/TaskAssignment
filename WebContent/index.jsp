@@ -5,14 +5,14 @@
  	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <body>
         <%
-        String email=(String)session.getAttribute("email");
-       // String email = null;
-       // Cookie[] cookies = request.getCookies();
-      //  if(cookies !=null){
-       // for(Cookie cookie : cookies){
-        //	 email = cookie.getValue();
-      //  }
-       // }
+       // String email=(String)session.getAttribute("email");
+       String email = null;
+       Cookie[] cookies = request.getCookies();
+       if(cookies !=null){
+       for(Cookie cookie : cookies){
+       	 email = cookie.getValue();
+       }
+       }
         //redirect user to home page if already logged in
         if(email!=null){
             response.sendRedirect("EmployeeController?action=LIST");
