@@ -27,10 +27,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		try {
 			
 			list = new ArrayList<Employee>();
-			String sql = "SELECT * FROM tbl_employee";
+			//String sql = "SELECT * FROM tbl_employee";
+			String plsql = "CALL Getemployee()";
 			connection = DBConnectionUtil.openConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
+			CallableStatement cst= connection.prepareCall(plsql);
+			//statement = connection.createStatement();
+			//resultSet = statement.executeQuery(sql);
+				ResultSet resultSet=cst.executeQuery();
 			while(resultSet.next()) {
 				employee = new Employee();
 				employee.setId(resultSet.getInt("id"));
@@ -50,10 +53,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		Employee employee = null;
 		try {
 			employee = new Employee();
-			String sql = "SELECT * FROM tbl_employee where id="+id;
+			//String sql = "SELECT * FROM tbl_employee where id="+id;
+				String plsql = "CALL Getoneemployee(?)";
 			connection = DBConnectionUtil.openConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
+			CallableStatement cst= connection.prepareCall(plsql);
+			//statement = connection.createStatement();
+			//resultSet = statement.executeQuery(sql);
+			cst.setInt(1, id);
+			ResultSet resultSet=cst.executeQuery();
 			if(resultSet.next()) {
 				employee.setId(resultSet.getInt("id"));
 				employee.setName(resultSet.getString("name"));
@@ -70,11 +77,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	public boolean save(Employee e) {
 		boolean flag = false;
 		try {
-			String sql = "INSERT INTO tbl_employee(name, department, dob)VALUES"
-					+ "('"+e.getName()+"', '"+e.getDepartment()+"', '"+e.getDob()+"')";
+			//String sql = "INSERT INTO tbl_employee(name, department, dob)VALUES"
+			//		+ "('"+e.getName()+"', '"+e.getDepartment()+"', '"+e.getDob()+"')";
 			connection = DBConnectionUtil.openConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.executeUpdate();
+			CallableStatement cst= connection.prepareCall("{CALL Addemployee(?,?,?)}");
+			cst.setString(1,e.getName());
+			cst.setString(2,e.getDepartment());
+			cst.setString(3,e.getDob());
+			//preparedStatement = connection.prepareStatement(sql);
+			//preparedStatement.executeUpdate();
+			cst.executeUpdate();
 			flag = true;
 		}catch(SQLException ex) {
 			ex.printStackTrace();
@@ -86,10 +98,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	public boolean delete(int id) {
 		boolean flag = false;
 		try {
-			String sql = "DELETE FROM tbl_employee where id="+id;
+			//String sql = "DELETE FROM tbl_employee where id="+id;
+			String plsql = "CALL Deleteemployee(?)";
 			connection = DBConnectionUtil.openConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.executeUpdate();
+			//preparedStatement = connection.prepareStatement(sql);
+			//preparedStatement.executeUpdate();
+				CallableStatement cst= connection.prepareCall(plsql);
+			cst.setInt(1, id);
+			cst.executeUpdate();
 			flag = true;
 		}catch(SQLException e) {
 			e.printStackTrace();
